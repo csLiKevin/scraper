@@ -5,6 +5,7 @@ import { options } from "yargs";
 import { scrapeFiles as scrapeDrive } from "./drive";
 import { scrapeFiles as scrapeDropbox } from "./dropbox";
 import { download, getIdPath, File } from "./file";
+import { scrapeFiles as scrapeImgur } from "./imgur";
 import { exists } from "./util";
 
 const { writeFile } = promises;
@@ -30,18 +31,18 @@ const { destination, dry, url } = options({
     .parse();
 
 (async () => {
-    const scrapers = [scrapeDrive, scrapeDropbox];
+    const scrapers = [scrapeDrive, scrapeDropbox, scrapeImgur];
     let files = [] as File[];
-    let unsupported = true;
+    let invalid = true;
     for (const scraper of scrapers) {
         try {
             files = await scraper(url);
-            unsupported = false;
+            invalid = false;
             break;
         } catch (error) {}
     }
 
-    if (unsupported) {
+    if (invalid) {
         throw new Error(`Invalid url: ${url}.`);
     }
 
