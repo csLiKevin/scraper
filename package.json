@@ -1,0 +1,25 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit index.ts && prettier **/*.ts --tab-width=4 --write",
+    "start": "npm run build && node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.1",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.7",
+    "@types/yargs": "^15.0.11",
+    "prettier": "^2.2.1",
+    "tslib": "^2.0.3",
+    "typescript": "^4.1.2"
+  }
+}
