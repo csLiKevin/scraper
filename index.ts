@@ -1,9 +1,10 @@
-import { dirname, join } from "path";
 import { promises } from "fs";
+import { dirname, join } from "path";
 import { options } from "yargs";
 
-import { scrapeFiles } from "./drive";
-import { download, getIdPath } from "./file";
+import { scrapeFiles as scrapeDrive } from "./drive";
+import { scrapeFiles as scrapeDropbox } from "./dropbox";
+import { download, getIdPath, File } from "./file";
 import { exists } from "./util";
 
 const { writeFile } = promises;
@@ -29,7 +30,20 @@ const { destination, dry, url } = options({
     .parse();
 
 (async () => {
-    const files = await scrapeFiles(url);
+    const scrapers = [scrapeDrive, scrapeDropbox];
+    let files = [] as File[];
+    let unsupported = true;
+    for (const scraper of scrapers) {
+        try {
+            files = await scraper(url);
+            unsupported = false;
+            break;
+        } catch (error) {}
+    }
+
+    if (unsupported) {
+        throw new Error(`Invalid url: ${url}.`);
+    }
 
     for (const file of files) {
         const { id, source } = file;
