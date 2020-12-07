@@ -6,7 +6,7 @@ import { scrapeFiles as scrapeDrive } from "./drive";
 import { scrapeFiles as scrapeDropbox } from "./dropbox";
 import { download, getIdPath, File } from "./file";
 import { scrapeFiles as scrapeImgur } from "./imgur";
-import { exists } from "./util";
+import { exists, UrlInvalidError } from "./util";
 
 const { writeFile } = promises;
 
@@ -43,7 +43,7 @@ const { destination, dry, url } = options({
     }
 
     if (invalid) {
-        throw new Error(`Invalid url: ${url}.`);
+        throw UrlInvalidError(url);
     }
 
     for (const file of files) {

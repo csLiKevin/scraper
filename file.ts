@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import { dirname, extname, join } from "path";
 import { pipeline } from "stream";
 import { promisify } from "util";
+import { UrlResolutionError } from "./util";
 
 const { mkdir } = fsPromises;
 const pipelinePromise = promisify(pipeline);
@@ -29,7 +30,7 @@ export async function download(source: FileSource, destination: string) {
         method: method,
     });
     if (!response.ok) {
-        throw new Error(`Could not resolve ${url}.`);
+        throw UrlResolutionError(url);
     }
 
     const parentFolder = dirname(destination);

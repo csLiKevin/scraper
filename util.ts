@@ -14,3 +14,15 @@ export async function exists(path: string) {
         return false;
     }
 }
+
+export function PageNotFoundMessage(url: string) {
+    return `Page not found: ${url}.`;
+}
+
+export function UrlResolutionError(url: string) {
+    return new Error(`Could not resolve ${url}.`);
+}
+
+export function UrlInvalidError(url: string) {
+    return new Error(`Invalid url: ${url}.`);
+}

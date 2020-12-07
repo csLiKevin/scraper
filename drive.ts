@@ -1,6 +1,11 @@
 import fetch from "node-fetch";
 import { File, IdPathPair } from "./file";
-import { escapeRegExp } from "./util";
+import {
+    escapeRegExp,
+    PageNotFoundMessage,
+    UrlInvalidError,
+    UrlResolutionError,
+} from "./util";
 
 export const GOOGLE_APIS = "www.googleapis.com";
 export const GOOGLE_DRIVE = "drive.google.com";
@@ -54,7 +59,7 @@ async function _scrapeFolderFiles(
         const url = `https://${GOOGLE_APIS}/drive/v3/files?key=${GOOGLE_API_KEY}&nextPageToken=${nextPageToken}&pageSize=1000&q="${id}" in parents`;
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`Could not resolve ${url}.`);
+            throw UrlResolutionError(url);
         }
 
         const json = (await response.json()) as FileMetadataList;
@@ -81,7 +86,7 @@ async function _scrapeFolderFiles(
 export async function scrapeFiles(url: string): Promise<File[]> {
     const match = url.match(regex);
     if (!match) {
-        throw new Error(`Invalid Google Drive url: ${url}.`);
+        throw UrlInvalidError(url);
     }
 
     const { id } = match.groups!;
@@ -89,11 +94,11 @@ export async function scrapeFiles(url: string): Promise<File[]> {
     const fileMetadataUrl = `https://${GOOGLE_APIS}/drive/v3/files/${id}?key=${GOOGLE_API_KEY}`;
     const response = await fetch(fileMetadataUrl);
     if (response.status === 404) {
-        console.warn(`Page not found: ${url}.`);
+        console.warn(PageNotFoundMessage(url));
         return [];
     }
     if (!response.ok) {
-        throw new Error(`Could not resolve ${url}.`);
+        throw UrlResolutionError(url);
     }
 
     const { mimeType, name } = (await response.json()) as FileMetadata;

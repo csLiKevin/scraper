@@ -1,6 +1,11 @@
 import fetch from "node-fetch";
 import { File, IdPathPair } from "./file";
-import { escapeRegExp } from "./util";
+import {
+    escapeRegExp,
+    PageNotFoundMessage,
+    UrlInvalidError,
+    UrlResolutionError,
+} from "./util";
 
 export const DROPBOX = "dropbox.com";
 export const DROPBOX_CONTENT_API = "content.dropboxapi.com";
@@ -139,7 +144,7 @@ async function _scrapeFolderFiles(
 
 export async function scrapeFiles(url: string): Promise<File[]> {
     if (!regex.test(url)) {
-        throw new Error(`Invalid Dropbox url: ${url}.`);
+        throw UrlInvalidError(url);
     }
 
     const response = await fetch(
@@ -156,11 +161,11 @@ export async function scrapeFiles(url: string): Promise<File[]> {
         }
     );
     if (response.status === 409) {
-        console.warn(`Page not found: ${url}.`);
+        console.warn(PageNotFoundMessage(url));
         return [];
     }
     if (!response.ok) {
-        throw new Error(`Could not resolve ${url}.`);
+        throw UrlResolutionError(url);
     }
     const {
         ".tag": tag,

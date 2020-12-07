@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 import { basename, extname } from "path";
 import { File, IdPathPair } from "./file";
-import { escapeRegExp } from "./util";
+import { escapeRegExp, UrlInvalidError, UrlResolutionError } from "./util";
 
 export const IMGUR = "imgur.com";
 export const IMGUR_DATA = "i.imgur.com";
@@ -51,7 +51,7 @@ export async function scrapeFiles(url: string): Promise<File[]> {
 
     const match = url.match(regex);
     if (!match) {
-        throw new Error(`Invalid Imgur url: ${url}.`);
+        throw UrlInvalidError(url);
     }
 
     const { id } = match.groups!;
@@ -62,7 +62,7 @@ export async function scrapeFiles(url: string): Promise<File[]> {
         },
     });
     if (!response.ok) {
-        throw new Error(`Could not resolve ${url}.`);
+        throw UrlResolutionError(url);
     }
 
     const {
