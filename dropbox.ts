@@ -12,7 +12,7 @@ export const DROPBOX_CONTENT_API = "content.dropboxapi.com";
 export const DROPBOX_WWW = "www.dropbox.com";
 
 const regex = new RegExp(
-    `https?://(www\\.)?${escapeRegExp(DROPBOX)}\/sh?\/[0-9a-zA-Z]{15}\/.+`
+    `https?://(www\\.)?${escapeRegExp(DROPBOX)}\/sh?\/[a-zA-Z\d]{15}\/.+`
 );
 const { DROPBOX_ACCESS_TOKEN } = process.env;
 

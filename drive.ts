@@ -13,7 +13,7 @@ export const GOOGLE_DRIVE = "drive.google.com";
 const regex = new RegExp(
     `^https?://${escapeRegExp(
         GOOGLE_DRIVE
-    )}\/(open\\?id=|drive\/(mobile\/)?folders\/|file\/d\/)(?<id>[0-9a-zA-Z_-]+)`
+    )}\/(open\\?id=|drive\/(mobile\/)?folders\/|file\/d\/)(?<id>[\w-]+)`
 );
 const { GOOGLE_API_KEY } = process.env;
 const GOOGLE_DRIVE_FOLDER_MIME_TYPE = "application/vnd.google-apps.folder" as string;

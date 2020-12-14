@@ -7,7 +7,7 @@ export const IMGUR = "imgur.com";
 export const IMGUR_DATA = "i.imgur.com";
 
 const regex = new RegExp(
-    `https?://${escapeRegExp(IMGUR)}\/(a|gallery)\/(?<id>[0-9a-zA-Z]+)`
+    `https?://${escapeRegExp(IMGUR)}\/(a|gallery)\/(?<id>[a-zA-Z\d]+)`
 );
 const { IMGUR_CLIENT_ID } = process.env;
 
